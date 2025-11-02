@@ -7,9 +7,14 @@ Sistema de control financiero personal con interfaz de consola
 from utils import mostrar_bienvenida
 from archivos import cargar_datos, guardar_datos
 from operaciones import (
-    registrar_ingreso, registrar_gasto, ver_balance, 
-    listar_movimientos, editar_movimiento, eliminar_movimiento, 
-    borrar_todos_movimientos
+    registrar_ingreso,
+    registrar_gasto,
+    ver_balance,
+    listar_movimientos,
+    editar_movimiento,
+    eliminar_movimiento,
+    borrar_todos_movimientos,
+    listar_categorias,
 )
 
 # Variable global para almacenar movimientos
@@ -24,17 +29,18 @@ def menu():
     print("2. 💸 Registrar gasto")
     print("3. 📊 Ver balance")
     print("4. 📋 Listar movimientos")
-    print("5. ✏️  Editar movimiento")
-    print("6. 🗑️  Eliminar movimiento")
-    print("7. 🧹 Borrar todos los movimientos")
-    print("8. 🚪 Salir")
+    print("5. 🗂️  Listar categorías")
+    print("6. ✏️  Editar movimiento")
+    print("7. 🗑️  Eliminar movimiento")
+    print("8. 🧹 Borrar todos los movimientos")
+    print("9. 🚪 Salir")
     print("="*50)
     
     try:
-        opcion = int(input("Selecciona una opción (1 a 8): "))
+        opcion = int(input("Selecciona una opción (1 a 9): "))
         return opcion
     except ValueError:
-        print("Error: Por favor ingresa un número válido entre 1 y 8.")
+        print("Error: Por favor ingresa un número válido entre 1 y 9.")
         return None
 
 def main():
@@ -60,17 +66,19 @@ def main():
         elif opcion == 4:
             listar_movimientos(movimientos)
         elif opcion == 5:
-            editar_movimiento(movimientos)
+            listar_categorias(movimientos)
         elif opcion == 6:
-            eliminar_movimiento(movimientos)
+            editar_movimiento(movimientos)
         elif opcion == 7:
-            borrar_todos_movimientos(movimientos)
+            eliminar_movimiento(movimientos)
         elif opcion == 8:
+            borrar_todos_movimientos(movimientos)
+        elif opcion == 9:
             guardar_datos(movimientos)
             print("Gestor finalizado, adios.")
             break
         else:
-            print("Opción no válida. Por favor selecciona una opción entre 1 y 8.")
+            print("Opción no válida. Por favor selecciona una opción entre 1 y 9.")
 
 # Ejecutar el programa principal
 if __name__ == "__main__":
