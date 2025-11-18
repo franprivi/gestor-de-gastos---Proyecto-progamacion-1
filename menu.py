@@ -6,6 +6,7 @@ Sistema de control financiero personal con interfaz de consola
 # Importar módulos del sistema
 from utils import mostrar_bienvenida
 from archivos import cargar_datos, guardar_datos
+from categorias import listar_categorias
 from operaciones import (
     registrar_ingreso,
     registrar_gasto,
@@ -14,7 +15,6 @@ from operaciones import (
     editar_movimiento,
     eliminar_movimiento,
     borrar_todos_movimientos,
-    listar_categorias,
 )
 
 # Variable global para almacenar movimientos
