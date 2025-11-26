@@ -6,23 +6,24 @@ Contiene las funciones principales de negocio del sistema
 from datetime import datetime
 from utils import formatear_monto
 from archivos import guardar_datos, borrar_archivo_datos
+from validaciones import validar_monto, validar_categoria, validar_descripcion
 
 def registrar_ingreso(movimientos):
     """Registra un nuevo ingreso en el sistema"""
     try:
-        monto = float(input("Ingresa el monto del ingreso: "))
-        if monto <= 0:
-            print("Error: El monto debe ser mayor a 0.")
-            return
-        
-        categoria = input("Ingresa una categoría para el ingreso (usa '/' para anidar, ej: comida/salida/almuerzo): ").strip()
-        if not categoria:
-            print("Error: La categoría no puede estar vacía.")
+        monto, error = validar_monto(input("Ingresa el monto del ingreso: "))
+        if error:
+            print(f"Error: {error}")
             return
 
-        descripcion = input("Ingresa una descripción para el ingreso: ").strip()
-        if not descripcion:
-            print("Error: La descripción no puede estar vacía.")
+        categoria, error = validar_categoria(input("Ingresa una categoría para el ingreso (usa '/' para anidar, ej: comida/salida/almuerzo): "))
+        if error:
+            print(f"Error: {error}")
+            return
+
+        descripcion, error = validar_descripcion(input("Ingresa una descripción para el ingreso: "))
+        if error:
+            print(f"Error: {error}")
             return
         
         fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -44,19 +45,19 @@ def registrar_ingreso(movimientos):
 def registrar_gasto(movimientos):
     """Registra un nuevo gasto en el sistema"""
     try:
-        monto = float(input("Ingresa el monto del gasto: "))
-        if monto <= 0:
-            print("Error: El monto debe ser mayor a 0.")
+        monto, error = validar_monto(input("Ingresa el monto del gasto: "))
+        if error:
+            print(f"Error: {error}")
             return
 
-        categoria = input("Ingresa una categoría para el gasto (usa '/' para anidar, ej: comida/salida/almuerzo): ").strip()
-        if not categoria:
-            print("Error: La categoría no puede estar vacía.")
+        categoria, error = validar_categoria(input("Ingresa una categoría para el gasto (usa '/' para anidar, ej: comida/salida/almuerzo): "))
+        if error:
+            print(f"Error: {error}")
             return
 
-        descripcion = input("Ingresa una descripción para el gasto: ").strip()
-        if not descripcion:
-            print("Error: La descripción no puede estar vacía.")
+        descripcion, error = validar_descripcion(input("Ingresa una descripción para el gasto: "))
+        if error:
+            print(f"Error: {error}")
             return
         
         fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -130,24 +131,29 @@ def editar_movimiento(movimientos):
         # Editar monto
         nuevo_monto = input(f"Nuevo monto (actual: {formatear_monto(mov['monto'])}): $")
         if nuevo_monto.strip():
-            try:
-                monto_float = float(nuevo_monto)
-                if monto_float > 0:
-                    mov['monto'] = monto_float
-                else:
-                    print("Monto inválido, se mantiene el anterior.")
-            except ValueError:
-                print("Monto inválido, se mantiene el anterior.")
+            monto_actualizado, error = validar_monto(nuevo_monto)
+            if error:
+                print(f"Error: {error}. Se mantiene el monto anterior.")
+            else:
+                mov['monto'] = monto_actualizado
         
         # Editar categoría
         nueva_categoria = input(f"Nueva categoría (actual: {mov['categoria']}): ")
         if nueva_categoria.strip():
-            mov['categoria'] = nueva_categoria
+            categoria_actualizada, error = validar_categoria(nueva_categoria)
+            if error:
+                print(f"Error: {error}. Se mantiene la categoría anterior.")
+            else:
+                mov['categoria'] = categoria_actualizada
         
         # Editar descripción
         nueva_descripcion = input(f"Nueva descripción (actual: {mov['descripcion']}): ")
         if nueva_descripcion.strip():
-            mov['descripcion'] = nueva_descripcion
+            descripcion_actualizada, error = validar_descripcion(nueva_descripcion)
+            if error:
+                print(f"Error: {error}. Se mantiene la descripción anterior.")
+            else:
+                mov['descripcion'] = descripcion_actualizada
         
         print("Movimiento editado correctamente.")
         guardar_datos(movimientos)
